@@ -96,39 +96,43 @@ local psubjob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", sub
 local changeMacro = function()
     local bookset = macromaster.settings.book[pmainjob];
     local pageset = macromaster.settings.page[psubjob];
-    local strBookCommand = ('/macro book '..bookset);
-    local strPageCommand = ('/macro set '..pageset);
-    AshitaCore:GetChatManager():QueueCommand(-1, strBookCommand);
-    AshitaCore:GetChatManager():QueueCommand(-1, strPageCommand);
+    if (bookset == nil or pageset == nil) then
+        return;
+    else
+        local strBookCommand = ('/macro book '..bookset);
+        local strPageCommand = ('/macro set '..pageset);
+        AshitaCore:GetChatManager():QueueCommand(-1, strBookCommand);
+        AshitaCore:GetChatManager():QueueCommand(-1, strPageCommand);
+    end
 end
 
-ashita.events.register('packet_in', 'packet_in_cb', function ()
+    ashita.events.register('packet_in', 'packet_in_cb', function ()
     local tempMJ = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", player:GetMainJob());
     local tempSJ = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", player:GetSubJob());
 
 
     if (tempMJ ~= nil and tempSJ ~= nil) then
-        if(tempMJ ~= pmainjob) then
-            pmainjob = tempMJ;
-            changeMacro();
-        elseif(tempSJ ~= psubjob) then
-            psubjob = tempSJ;
-            changeMacro();
-        else
-            return;
-        end
+    if(tempMJ ~= pmainjob) then
+    pmainjob = tempMJ;
+    changeMacro();
+    elseif(tempSJ ~= psubjob) then
+    psubjob = tempSJ;
+    changeMacro();
+    else
+    return;
     end
-end);
+    end
+    end);
 
-ashita.events.register('unload', 'unload_cb', function()
+    ashita.events.register('unload', 'unload_cb', function()
     settings.save();
-end);
+    end);
 
-ashita.events.register('command', 'command_cb', function(e)
+    ashita.events.register('command', 'command_cb', function(e)
     --Parse Args
     local args = e.command:args();
     if (#args == 0 or not args[1]:any('/macromaster')) then
-        return;
+    return;
     end
 
     --Block Related Commands
@@ -136,27 +140,27 @@ ashita.events.register('command', 'command_cb', function(e)
 
     --Handle Commands
     if(#args <= 3) then
-        print(chat.header('Set your macro book and page defaults for your current job and subjob by using the command "/macromaster set [book/page] #"'))
-        print(chat.message('Replace the [book/page] with the desired change and # with the desired book or page.'))
+    print(chat.header('Set your macro book and page defaults for your current job and subjob by using the command "/macromaster set [book/page] #"'))
+    print(chat.message('Replace the [book/page] with the desired change and # with the desired book or page.'))
     end
     if(#args > 3 and args[2]:any('set')) then
 
 
 
-        if(args[3]:any('book')) then
-            print(chat.header('Setting Macro Settings'));
-            print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
-            macromaster.settings.book[pmainjob] = args[4];
-            return;
-        elseif (args[3]:any('page')) then
-            print(chat.header('Setting Macro Settings'));
-            print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
-            macromaster.settings.page[pmainjob] = args[4];
-            return;
-        else
-            print(chat.header('Please follow the correct syntax to set your macro management.'));
-            return;
-        end
+    if(args[3]:any('book')) then
+    print(chat.header('Setting Macro Settings'));
+    print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
+    macromaster.settings.book[pmainjob] = args[4];
+    return;
+    elseif (args[3]:any('page')) then
+    print(chat.header('Setting Macro Settings'));
+    print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
+    macromaster.settings.page[pmainjob] = args[4];
+    return;
+    else
+    print(chat.header('Please follow the correct syntax to set your macro management.'));
+    return;
+    end
 
     end
-end)
+    end)
