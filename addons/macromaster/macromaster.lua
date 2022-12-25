@@ -11,7 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 addon.name    = 'MacroMaster';
 addon.author  = 'banggugyangu';
-addon.version = '1.0.0';
+addon.version = '1.0.1';
 
 --Dependencies--
 require('ffi');
