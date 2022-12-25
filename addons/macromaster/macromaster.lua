@@ -112,27 +112,27 @@ end
 
 
     if (tempMJ ~= nil and tempSJ ~= nil) then
-    if(tempMJ ~= pmainjob) then
-    pmainjob = tempMJ;
-    changeMacro();
-    elseif(tempSJ ~= psubjob) then
-    psubjob = tempSJ;
-    changeMacro();
-    else
-    return;
+        if(tempMJ ~= pmainjob) then
+            pmainjob = tempMJ;
+            changeMacro();
+        elseif(tempSJ ~= psubjob) then
+            psubjob = tempSJ;
+            changeMacro();
+        else
+            return;
+        end
     end
-    end
-    end);
+end);
 
-    ashita.events.register('unload', 'unload_cb', function()
+ashita.events.register('unload', 'unload_cb', function()
     settings.save();
-    end);
+end);
 
-    ashita.events.register('command', 'command_cb', function(e)
+ashita.events.register('command', 'command_cb', function(e)
     --Parse Args
     local args = e.command:args();
     if (#args == 0 or not args[1]:any('/macromaster')) then
-    return;
+        return;
     end
 
     --Block Related Commands
@@ -140,27 +140,27 @@ end
 
     --Handle Commands
     if(#args <= 3) then
-    print(chat.header('Set your macro book and page defaults for your current job and subjob by using the command "/macromaster set [book/page] #"'))
-    print(chat.message('Replace the [book/page] with the desired change and # with the desired book or page.'))
+        print(chat.header('Set your macro book and page defaults for your current job and subjob by using the command "/macromaster set [book/page] #"'))
+        print(chat.message('Replace the [book/page] with the desired change and # with the desired book or page.'))
     end
     if(#args > 3 and args[2]:any('set')) then
 
 
 
-    if(args[3]:any('book')) then
-    print(chat.header('Setting Macro Settings'));
-    print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
-    macromaster.settings.book[pmainjob] = args[4];
-    return;
-    elseif (args[3]:any('page')) then
-    print(chat.header('Setting Macro Settings'));
-    print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
-    macromaster.settings.page[pmainjob] = args[4];
-    return;
-    else
-    print(chat.header('Please follow the correct syntax to set your macro management.'));
-    return;
-    end
+        if(args[3]:any('book')) then
+            print(chat.header('Setting Macro Settings'));
+            print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
+            macromaster.settings.book[pmainjob] = ToInt(args[4]);
+            return;
+        elseif (args[3]:any('page')) then
+            print(chat.header('Setting Macro Settings'));
+            print(chat.message(args[3] .. ' set to ' .. args[3] .. ' ' .. args[4]));
+            macromaster.settings.page[psubjob] = ToInt(args[4]);
+            return;
+        else
+            print(chat.header('Please follow the correct syntax to set your macro management.'));
+            return;
+        end
 
     end
     end)
